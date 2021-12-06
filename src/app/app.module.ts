@@ -6,6 +6,9 @@ import { AppComponent } from './app.component';
 import { TipoEjercicioComponent } from './modules/tipo-ejercicio/tipo-ejercicio.component';
 import { EjercicioComponent } from './modules/ejercicio/ejercicio.component';
 import { NavbarComponent } from './core/navbar/navbar.component';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 @NgModule({
   declarations: [
@@ -16,7 +19,11 @@ import { NavbarComponent } from './core/navbar/navbar.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule,
+    HttpClientModule,
+    ModalModule.forRoot(),
+    ModalModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

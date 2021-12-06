@@ -1,1 +1,63 @@
-<p>ejercicio works!</p>
+<div class="container">
+    <h1 class="text-center mt-3">Ejercicio</h1>
+    <div class="row mt-3">
+        <div class="col">
+            <button type="button" class="btn btn-primary" (click)="openModal(template, 'Crear')">Crear</button>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-12">
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Descripción</th>
+                    <th scope="col">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of listGlobal">
+                    <td>{{item.id_ejercicio}}</td>
+                    <td>{{item.nombre_ejercicio}}</td>
+                    <td>{{item.dsc_ejercicio}}</td>
+                    <td>
+                        <button type="button" class="btn btn-secondary mr-2" (click)="openModal(template, 'Editar', item)">Editar</button>
+                        <button type="button" class="btn btn-danger mr-2" (click)="delete(item.id_ejercicio)">Eliminar</button>
+                    </td>
+                  </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<ng-template #template>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Tipo Ejercicio</h4>
+      <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+        <span aria-hidden="true" class="visually-hidden">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+          <div class="col-12">
+            <label>Seleccionar tipo de ejercicio</label>
+            <select class="form-control" [(ngModel)]="selectId" fullwidth>
+                <option selected>Seleccione</option>
+                <option [value]="item.id_tipo_ejercicio" *ngFor="let item of listTipoEjercicio">{{item.dsc_tipo_ejercicio}}</option>
+              </select>
+          </div>
+          <div class="col-12 mt-3">
+            <label>Nombre</label>
+            <input type="text" [(ngModel)]="inputData" class="form-control">
+          </div>
+          <div class="col-12 mt-3">
+            <label>Descripción</label>
+            <input type="text" [(ngModel)]="inputDataDesc" class="form-control">
+          </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="sendData()">Guardar</button>
+      </div>
+  </ng-template>
