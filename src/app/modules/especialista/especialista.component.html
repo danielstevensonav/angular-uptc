@@ -1,5 +1,5 @@
 <div class="container">
-    <h1 class="text-center mt-3">Ejercicio</h1>
+    <h1 class="text-center mt-3">Especialista</h1>
     <div class="row mt-3">
         <div class="col">
             <button type="button" class="btn btn-primary" (click)="openModal(template, 'Crear')">Crear</button>
@@ -12,20 +12,20 @@
                   <tr>
                     <th scope="col">ID</th>
                     <th scope="col">Nombre</th>
-                    <th scope="col">Descripción</th>
-                    <th scope="col">Tipo Ejercicio</th>
+                    <th scope="col">Fecha Nacimiento</th>
+                    <th scope="col">Tarjeta Profesional</th>
                     <th scope="col">Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr *ngFor="let item of listGlobal">
-                    <td>{{item.id_ejercicio}}</td>
-                    <td>{{item.nombre_ejercicio}}</td>
-                    <td>{{item.dsc_ejercicio}}</td>
-                    <td>{{item.tipoEjercicio.dsc_tipo_ejercicio}}</td>
+                    <td>{{item.id_especialista}}</td>
+                    <td>{{item.nombre}}</td>
+                    <td>{{item.fecha_nacimiento}}</td>
+                    <td>{{item.tarjeta_profesional}}</td>
                     <td>
                         <button type="button" class="btn btn-secondary mr-2" (click)="openModal(template, 'Editar', item)">Editar</button>
-                        <button type="button" class="btn btn-danger mr-2" (click)="delete(item.id_ejercicio)">Eliminar</button>
+                        <button type="button" class="btn btn-danger mr-2" (click)="delete(item.id_especialista)">Eliminar</button>
                     </td>
                   </tr>
                 </tbody>
@@ -43,19 +43,16 @@
     <div class="modal-body">
       <div class="row">
           <div class="col-12">
-            <label>Seleccionar tipo de ejercicio</label>
-            <select class="form-control" [(ngModel)]="selectId" fullwidth>
-                <option selected>Seleccione</option>
-                <option [value]="item.id_tipo_ejercicio" *ngFor="let item of listTipoEjercicio">{{item.dsc_tipo_ejercicio}}</option>
-              </select>
-          </div>
-          <div class="col-12 mt-3">
-            <label>Nombre</label>
+            <label>Descripción</label>
             <input type="text" [(ngModel)]="inputData" class="form-control">
           </div>
           <div class="col-12 mt-3">
             <label>Descripción</label>
-            <input type="text" [(ngModel)]="inputDataDesc" class="form-control">
+            <input type="date" [(ngModel)]="inputDate" class="form-control">
+          </div>
+          <div class="col-12 mt-3">
+            <label>Tarjeta Profesional</label>
+            <input type="text" [(ngModel)]="inputTarjeta" class="form-control">
           </div>
       </div>
     </div>

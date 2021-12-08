@@ -1,26 +1,24 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { Ejercicio } from 'src/app/core/model/Ejercicio';
-import { TipoEjercicio } from 'src/app/core/model/TipoEjercicio';
+import { Especialista } from 'src/app/core/model/Especialista';
 import { ProviderService } from 'src/app/core/provider.service';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-ejercicio',
-  templateUrl: './ejercicio.component.html',
-  styleUrls: ['./ejercicio.component.css']
+  selector: 'app-especialista',
+  templateUrl: './especialista.component.html',
+  styleUrls: ['./especialista.component.css']
 })
-export class EjercicioComponent implements OnInit {
+export class EspecialistaComponent implements OnInit {
 
   modalRef?: BsModalRef;
 
   inputData: string | undefined;
-  inputDataDesc: string | undefined;
-  selectId: number | undefined;
-  listGlobal: Ejercicio[] | undefined;
+  inputDate: any | undefined;
+  inputTarjeta: string | undefined;
+  listGlobal: Especialista[] | undefined;
   title: string | undefined;
   idGlobal: any | undefined;
-  listTipoEjercicio: TipoEjercicio[] | undefined;
 
   constructor(private modalService: BsModalService,
               private _serviceGlobal: ProviderService) {}
@@ -29,17 +27,18 @@ export class EjercicioComponent implements OnInit {
     this.loadData();
   }
 
-  openModal(template: TemplateRef<any>, data: string, item?: Ejercicio) {
+  openModal(template: TemplateRef<any>, data: string, item?: Especialista) {
     if(data === 'Crear'){
       this.title = 'Crear';
       this.inputData = '';
+      this.inputTarjeta = '';
     }
     if(data === 'Editar'){
       this.title = 'Editar';
-      this.idGlobal = item?.id_ejercicio;
-      this.inputData = item?.nombre_ejercicio;
-      this.inputDataDesc = item?.dsc_ejercicio;
-      this.selectId = item?.tipoEjercicio.id_tipo_ejercicio;
+      this.idGlobal = item?.id_especialista;
+      this.inputData = item?.nombre;
+      this.inputDate = item?.fecha_nacimiento;
+      this.inputTarjeta = item?.tarjeta_profesional;
       
     }
     this.modalRef = this.modalService.show(template);
@@ -49,12 +48,11 @@ export class EjercicioComponent implements OnInit {
       if(this.inputData){
         if(this.title === 'Crear'){
           let json: any = {
-            nombre_ejercicio: this.inputData,
-            dsc_ejercicio: this.inputDataDesc,
-            tipoEjercicio: this.selectId
+            nombre: this.inputData,
+            fecha_nacimiento: this.inputDate,
+            tarjeta_profesional: this.inputTarjeta
           }
-          console.log(json);
-          this._serviceGlobal.postEjercicio(json).subscribe((resp: any) => {
+          this._serviceGlobal.postEspecialista(json).subscribe((resp: any) => {
             console.log(resp);
             this.loadData();
             this.modalRef?.hide();
@@ -62,12 +60,12 @@ export class EjercicioComponent implements OnInit {
         }
         if(this.title === 'Editar'){
           let json: any = {
-            nombre_ejercicio: this.inputData,
-            dsc_ejercicio: this.inputDataDesc,
-            tipoEjercicio: this.selectId
+            nombre: this.inputData,
+            fecha_nacimiento: this.inputDate,
+            tarjeta_profesional: this.inputTarjeta
           }
           console.log(this.idGlobal, json);
-          this._serviceGlobal.putEjercicio(this.idGlobal, json).subscribe((resp: any) => {
+          this._serviceGlobal.putEspecialista(this.idGlobal, json).subscribe((resp: any) => {
             console.log(resp);
             this.loadData();
             this.modalRef?.hide();
@@ -82,19 +80,14 @@ export class EjercicioComponent implements OnInit {
   }
 
   loadData() : void {
-    this._serviceGlobal.getListEjercicio().subscribe((resp: any) => {
+    this._serviceGlobal.getListEspecialista().subscribe((resp: any) => {
       console.log(resp);
       this.listGlobal = resp;
-    });
-
-    this._serviceGlobal.getListTipoEjercicio().subscribe((resp: any) => {
-      console.log(resp);
-      this.listTipoEjercicio = resp;
     });
   }
 
   delete(id: any): void {
-    this._serviceGlobal.deleteEjercicio(id).subscribe((resp: any) => {
+    this._serviceGlobal.deleteEspecialista(id).subscribe((resp: any) => {
       console.log(resp);
       this.loadData();
     });

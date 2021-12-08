@@ -1,26 +1,23 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { Ejercicio } from 'src/app/core/model/Ejercicio';
-import { TipoEjercicio } from 'src/app/core/model/TipoEjercicio';
+import { ParteCuerpo } from 'src/app/core/model/ParteCupero';
 import { ProviderService } from 'src/app/core/provider.service';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-ejercicio',
-  templateUrl: './ejercicio.component.html',
-  styleUrls: ['./ejercicio.component.css']
+  selector: 'app-parte-cuerpo',
+  templateUrl: './parte-cuerpo.component.html',
+  styleUrls: ['./parte-cuerpo.component.css']
 })
-export class EjercicioComponent implements OnInit {
+export class ParteCuerpoComponent implements OnInit {
 
   modalRef?: BsModalRef;
 
   inputData: string | undefined;
-  inputDataDesc: string | undefined;
-  selectId: number | undefined;
-  listGlobal: Ejercicio[] | undefined;
+  listGlobal: ParteCuerpo[] | undefined;
   title: string | undefined;
   idGlobal: any | undefined;
-  listTipoEjercicio: TipoEjercicio[] | undefined;
+  selectId: any | undefined;
 
   constructor(private modalService: BsModalService,
               private _serviceGlobal: ProviderService) {}
@@ -29,17 +26,18 @@ export class EjercicioComponent implements OnInit {
     this.loadData();
   }
 
-  openModal(template: TemplateRef<any>, data: string, item?: Ejercicio) {
+  openModal(template: TemplateRef<any>, data: string, item?: ParteCuerpo) {
     if(data === 'Crear'){
       this.title = 'Crear';
       this.inputData = '';
     }
     if(data === 'Editar'){
       this.title = 'Editar';
-      this.idGlobal = item?.id_ejercicio;
-      this.inputData = item?.nombre_ejercicio;
-      this.inputDataDesc = item?.dsc_ejercicio;
-      this.selectId = item?.tipoEjercicio.id_tipo_ejercicio;
+      this.idGlobal = item?.id_musculo;
+      this.inputData = item?.dsc_musculo;
+      if(item?.parteCuerpoHijo !== null){
+        this.selectId = item?.parteCuerpoHijo.id_musculo;
+      }
       
     }
     this.modalRef = this.modalService.show(template);
@@ -49,12 +47,10 @@ export class EjercicioComponent implements OnInit {
       if(this.inputData){
         if(this.title === 'Crear'){
           let json: any = {
-            nombre_ejercicio: this.inputData,
-            dsc_ejercicio: this.inputDataDesc,
-            tipoEjercicio: this.selectId
+            dsc_musculo: this.inputData,
+            parteCuerpoHijo: this.selectId
           }
-          console.log(json);
-          this._serviceGlobal.postEjercicio(json).subscribe((resp: any) => {
+          this._serviceGlobal.postParteCuerpo(json).subscribe((resp: any) => {
             console.log(resp);
             this.loadData();
             this.modalRef?.hide();
@@ -62,12 +58,11 @@ export class EjercicioComponent implements OnInit {
         }
         if(this.title === 'Editar'){
           let json: any = {
-            nombre_ejercicio: this.inputData,
-            dsc_ejercicio: this.inputDataDesc,
-            tipoEjercicio: this.selectId
+            dsc_musculo: this.inputData,
+            parteCuerpoHijo: this.selectId
           }
           console.log(this.idGlobal, json);
-          this._serviceGlobal.putEjercicio(this.idGlobal, json).subscribe((resp: any) => {
+          this._serviceGlobal.putParteCuerpo(this.idGlobal, json).subscribe((resp: any) => {
             console.log(resp);
             this.loadData();
             this.modalRef?.hide();
@@ -82,19 +77,23 @@ export class EjercicioComponent implements OnInit {
   }
 
   loadData() : void {
-    this._serviceGlobal.getListEjercicio().subscribe((resp: any) => {
+    this._serviceGlobal.getListParteCuerpo().subscribe((resp: any) => {
+      for (let index = 0; index < resp.length; index++) {
+        console.log(resp.parteCuerpoHijo);
+        if(resp[index].parteCuerpoHijo === null){
+          resp[index].validate = true;
+          resp[index].aux = 'No tiene asignado';
+        } else {
+          resp[index].validate = false;
+        }
+      }
       console.log(resp);
       this.listGlobal = resp;
-    });
-
-    this._serviceGlobal.getListTipoEjercicio().subscribe((resp: any) => {
-      console.log(resp);
-      this.listTipoEjercicio = resp;
     });
   }
 
   delete(id: any): void {
-    this._serviceGlobal.deleteEjercicio(id).subscribe((resp: any) => {
+    this._serviceGlobal.deleteParteCuerpo(id).subscribe((resp: any) => {
       console.log(resp);
       this.loadData();
     });
